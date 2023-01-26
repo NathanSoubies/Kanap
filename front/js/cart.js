@@ -2,8 +2,6 @@
 const page = document.location.href;
 //----------------------------------------------------------------
 // Récupération des produits de l'api
-//----------------------------------------------------------------
-// appel de la ressource api product (voir script.js) si on est sur la page panier
 if (page.match("cart")) {
 fetch("http://localhost:3000/api/products")
   .then((res) => res.json())
@@ -12,7 +10,7 @@ fetch("http://localhost:3000/api/products")
       // appel de la fonction affichagePanier
       affichagePanier(objetProduits);
   })
-  .catch((err) => {
+  .catch((error) => {
       document.querySelector("#cartAndFormContainer").innerHTML = "<h1>erreur 404</h1>";
       console.log("erreur 404, sur ressource api: " + err);
   });
@@ -23,10 +21,10 @@ fetch("http://localhost:3000/api/products")
 // Fonction détermine les conditions d'affichage des produits du panier
 //--------------------------------------------------------------
 function affichagePanier(index) {
-  // on récupère le panier converti
+  // Récupération du panier converti
   let panier = JSON.parse(localStorage.getItem("panierStocké"));
   // si il y a un panier avec une taille differante de 0 (donc supérieure à 0)
-   if (panier && panier.length != 0) {
+  if (panier && panier.length != 0) {
     // zone de correspondance clef/valeur de l'api et du panier grâce à l'id produit choisit dans le localStorage
     for (let choix of panier) {
       console.log(choix);
