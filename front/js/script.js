@@ -10,13 +10,6 @@ function getArticles() {
     .then(function (res) {
       return res.json();
     })
-    .catch((error) => {
-      let sectionitems = document.querySelector(".items");
-      sectionitems.innerHTML =
-        "Nous n'avons pas réussi à afficher nos articles. Avez vous bien lancé le serveur local (Port 3000) ? <br>Si le problème persiste, contactez-nous.";
-      productsContainer.style.textAlign = "center";
-      productsContainer.style.padding = "30vh 0";
-    })
 
     // Dispatche des données de chaque produit
     .then(function (resultatAPI) {
@@ -47,5 +40,13 @@ function getArticles() {
         productDescri.innerText = resultatAPI[article].description;
 
       }
+    })
+
+    .catch((error) => {
+      let sectionitems = document.querySelector(".items");
+      sectionitems.innerHTML =
+        "Nous n'avons pas réussi à afficher nos articles. Avez vous bien lancé le serveur local (Port 3000) ? <br>Si le problème persiste, contactez-nous.";
+      productsContainer.style.textAlign = "center";
+      productsContainer.style.padding = "30vh 0";
     });
 }
