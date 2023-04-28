@@ -2,7 +2,7 @@
 const urlsearchparmas = new URLSearchParams(document.location.search)
 
 const id = urlsearchparmas.get("id")
-console.log(id)
+// console.log(id)
 
 // Récupération du produit sur l'API
 fetch(`http://localhost:3000/api/products/${id}`)
@@ -14,7 +14,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
 // Dispatch des données de l'article
   .then(function (resultatAPI) {
     const articles = resultatAPI;
-    console.log(articles);
+    // console.log(articles);
 
       let productImg = document.createElement("img");
       document.querySelector(".item__img").appendChild(productImg);
@@ -63,7 +63,7 @@ choixCouleur.addEventListener("input", (ec) => {
   //ça reset la couleur et le texte du bouton si il y a une action sur les inputs dans le cas d'une autre commande du même produit
   document.querySelector("#addToCart").style.color = "white";
   document.querySelector("#addToCart").textContent = "Ajouter au panier";
-  console.log(couleurProduit);
+  // console.log(couleurProduit);
 });
   // choix quantité dynamique
 //------------------------------------------------------------------------
@@ -79,7 +79,7 @@ choixQuantité.addEventListener("input", (eq) => {
   //ça reset la couleur et le texte du bouton si il y a une action sur les inputs dans le cas d'une autre commande du même produit
   document.querySelector("#addToCart").style.color = "white";
   document.querySelector("#addToCart").textContent = "Ajouter au panier";
-  console.log(quantitéProduit);
+  // console.log(quantitéProduit);
 });
 //------------------------------------------------------------------------
 // conditions de validation du clic via le bouton ajouter au panier
@@ -103,7 +103,7 @@ choixProduit.addEventListener("click", () => {
   } else {
     // joue panier
     Panier();
-    console.log("clic effectué");
+    // console.log("clic effectué");
     //effet visuel d'ajout de produit
     document.querySelector("#addToCart").style.color = "rgb(0, 205, 0)";
     document.querySelector("#addToCart").textContent = "Produit ajouté !";
@@ -124,12 +124,12 @@ let produitsAPousser = [];
 // fonction ajoutPremierProduit qui ajoute l'article choisi dans le tableau vierge
 //-------------------------------------------------------------------------
 function ajoutPremierProduit() {
-  console.log(produitsEnregistrés);
+	// console.log(produitsEnregistrés);
   //si produitsEnregistrés est null c'est qu'il n'a pas été créé
   if (produitsEnregistrés === null) {
     // pousse le produit choisit dans choixProduitClient
     choixProduitClient.push(articleClient);
-    console.log(articleClient);
+    // console.log(articleClient);
     // dernière commande, envoit choixProduitClient dans le local storage sous le nom de panierStocké de manière JSON stringifié
     return (localStorage.panierStocké = JSON.stringify(choixProduitClient));
   }
@@ -172,7 +172,7 @@ function Panier() {
       //comparateur d'égalité des articles actuellement choisis et ceux déja choisis
       if (choix._id === id && choix.couleur === articleClient.couleur) {
         //information client
-        alert("RAPPEL: Vous aviez déja choisit cet article.");
+        alert("RAPPEL: Vous aviez déja choisit cet article. Nous avons donc modifez la quantité");
         // on modifie la quantité d'un produit existant dans le panier du localstorage
         //définition de additionQuantité qui est la valeur de l'addition de l'ancienne quantité parsée et de la nouvelle parsée pour le même produit
         let additionQuantité = parseInt(choix.quantité) + parseInt(quantitéProduit);

@@ -102,14 +102,22 @@ function modifQuantité() {
       let panier = JSON.parse(localStorage.getItem("panierStocké"));
       // boucle pour modifier la quantité du produit du panier grace à la nouvelle valeur
       for (article of panier)
-        if (
-          article._id === cart.dataset.id &&
-          cart.dataset.couleur === article.couleur
+      if (eq.target.value < 1 ||
+        eq.target.value > 100)
+          {
+            eq.target.value=cart.dataset.quantité;
+            article.quantité = eq.target.value;
+            localStorage.panierStocké = JSON.stringify(panier);
+            alert("ERREUR!! Vous avez rentrez une valeur négative, nous avons remis la valeur à " + cart.dataset.quantité);
+            totalProduit();
+          }
+        else if(
+          eq.target.value>0 ||
+          eq.target.value<101
         ) {
           article.quantité = eq.target.value;
+          cart.dataset.quantité=eq.target.value;
           localStorage.panierStocké = JSON.stringify(panier);
-          // on met à jour le dataset quantité
-          cart.dataset.quantité = eq.target.value;
           // on joue la fonction pour actualiser les données
           totalProduit();
         }
@@ -182,7 +190,6 @@ function totalProduit() {
 //  formulaire
 //--------------------------------------------------------------
 // les données du client seront stockées dans ce tableau pour la commande sur page panier
-if (page.match("cart")) {
   var contactClient = {};
   localStorage.contactClient = JSON.stringify(contactClient);
   // voir https://cheatography.com/davechild/cheat-sheets/regular-expressions/
@@ -208,7 +215,7 @@ if (page.match("cart")) {
   var regexTexte = document.querySelectorAll(".regex_texte");
   // modification du type de l'input type email à text à cause d'un comportement de l'espace blanc non voulu vis à vis de la regex 
   document.querySelector("#email").setAttribute("type", "text");
-}
+
 //--------------------------------------------------------------
 //regex 
 //--------------------------------------------------------------
@@ -221,7 +228,6 @@ let regMatchEmail = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+
 //--------------------------------------------------------------
 // Ecoute et attribution de point(pour sécurité du clic) si ces champs sont ok d'après la regex
 //--------------------------------------------------------------
-if (page.match("cart")) {
   regexTexte.forEach((regexTexte) =>
     regexTexte.addEventListener("input", (e) => {
       // valeur sera la valeur de l'input en dynamique
@@ -248,7 +254,6 @@ if (page.match("cart")) {
       valideClic();
     })
   );
-}
 //------------------------------------
 // le champ écouté via la regex regexLettre fera réagir, grâce à texteInfo, la zone concernée
 //------------------------------------
@@ -258,7 +263,6 @@ texteInfo(regexLettre, "#cityErrorMsg", ville);
 //--------------------------------------------------------------
 // Ecoute et attribution de point(pour sécurité du clic) si ces champs sont ok d'après la regex
 //--------------------------------------------------------------
-if (page.match("cart")) {
   let regexAdresse = document.querySelector(".regex_adresse");
   regexAdresse.addEventListener("input", (e) => {
     // valeur sera la valeur de l'input en dynamique
@@ -277,7 +281,6 @@ if (page.match("cart")) {
     couleurRegex(regAdresse, valeur, regexAdresse);
     valideClic();
   });
-}
 //------------------------------------
 // le champ écouté via la regex regexChiffreLettre fera réagir, grâce à texteInfo, la zone concernée
 //------------------------------------
@@ -285,7 +288,6 @@ texteInfo(regexChiffreLettre, "#addressErrorMsg", adresse);
 //--------------------------------------------------------------
 // Ecoute et attribution de point(pour sécurité du clic) si ce champ est ok d'après les regex
 //--------------------------------------------------------------
-if (page.match("cart")) {
   let regexEmail = document.querySelector(".regex_email");
   regexEmail.addEventListener("input", (e) => {
     // valeur sera la valeur de l'input en dynamique
@@ -304,11 +306,9 @@ if (page.match("cart")) {
     couleurRegex(regValide, valeur, regexEmail);
     valideClic();
   });
-}
 //------------------------------------
 // texte sous champ email
 //------------------------------------
-if (page.match("cart")) {
   email.addEventListener("input", (e) => {
     // valeur sera la valeur de l'input en dynamique
     valeur = e.target.value;
@@ -331,7 +331,6 @@ if (page.match("cart")) {
       document.querySelector("#emailErrorMsg").style.color = "white";
     }
   });
-}
 //--------------------------------------------------------------
 // fonction couleurRegex qui modifira la couleur de l'input par remplissage tapé, aide visuelle et accessibilité
 //--------------------------------------------------------------
@@ -398,18 +397,16 @@ function valideClic() {
 //----------------------------------------------------------------
 // Envoi de la commande
 //----------------------------------------------------------------
-if (page.match("cart")) {
   commande.addEventListener("click", (e) => {
     // empeche de recharger la page on prévient le reload du bouton
     e.preventDefault();
     valideClic();
     envoiPaquet();
   });
-}
 //----------------------------------------------------------------
 // fonction récupérations des id puis mis dans un tableau
 //----------------------------------------------------------------
-// définition du panier quine comportera que les id des produits choisi du local storage
+// définition du panier qui ne comportera que les id des produits choisi du local storage
 let panierId = [];
 function tableauId() {
 // appel des ressources
@@ -466,7 +463,7 @@ function envoiPaquet() {
       .then((res) => res.json())
       .then((data) => {
         // envoyé à la page confirmation, autre écriture de la valeur "./confirmation.html?commande=${data.orderId}"
-        window.location.href = `/front/html/confirmation.html?commande=${data.orderId}`;
+        window.location.href = `confirmation.html?commande=${data.orderId}`;
       })
       .catch(function (err) {
         console.log(err);
@@ -474,21 +471,4 @@ function envoiPaquet() {
       });
   }
 }
-//------------------------------------------------------------
-// fonction affichage autoinvoquée du numéro de commande et vide du storage lorsque l'on est sur la page confirmation
-//------------------------------------------------------------
-(function Commande() {
-  if (page.match("confirmation")) {
-    sessionStorage.clear();
-    localStorage.clear();
-    // valeur du numero de commande
-    let numCom = new URLSearchParams(document.location.search).get("commande");
-    // merci et mise en page
-    document.querySelector("#orderId").innerHTML = `<br>${numCom}<br>Merci pour votre achat`;
-    console.log("valeur de l'orderId venant de l'url: " + numCom);
-    //réinitialisation du numero de commande
-    numCom = undefined;
-  } else {
-    console.log("sur page cart");
-  }
-})();
+

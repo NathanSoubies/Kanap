@@ -14,7 +14,7 @@ function getArticles() {
     // Dispatche des données de chaque produit
     .then(function (resultatAPI) {
       const articles = resultatAPI;
-      console.log(articles);
+      // console.log(articles);
       for (let article in articles) {
 
         let productLink = document.createElement("a");
